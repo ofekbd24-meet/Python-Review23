@@ -1,5 +1,7 @@
 # this disctionary has the functionality of a class
 # instead you can write it as a class easily
+import speech_recognition as sr
+
 def create_youtube_video(title: str, description: str, hashtags: list) -> dict:
     video = {
         "title": title,
@@ -28,7 +30,15 @@ def similarity_to_video(video_a: dict, video_b: dict) -> float:
     return [(pct := pct + 0.2)if h in video_b["hashtag"]else(pct) for h in video_a["hashtag"]][-1]
 
 video = create_youtube_video("test", "example", ["a", "b", "c", "d", "e", "f"])
-for i in range(495):
+print("say the number of likes you'd like to add")
+
+r = sr.Recognizer()
+mic = sr.Microphone()
+with mic as source:
+    r.adjust_for_ambient_noise(source)
+    audio = r.listen(source)
+
+for i in range(int(r.recognize_google(audio))):
     like(video)
 print(video)
 video_b = create_youtube_video("example", "test", ["c", "d", "e", "f", "g"])
